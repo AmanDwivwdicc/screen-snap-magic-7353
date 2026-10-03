@@ -8,6 +8,8 @@ export const Route = createFileRoute("/_authenticated/counsellor/")({
       { name: "description", content: "Your AI career mentor session." },
       { property: "og:title", content: "Talk to Saathi — CareerSaathi" },
       { property: "og:description", content: "Your AI career mentor session." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   beforeLoad: async ({ context }) => {

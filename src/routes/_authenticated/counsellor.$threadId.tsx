@@ -34,6 +34,7 @@ import {
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { JourneyNav } from "@/components/journey/JourneyNav";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/counsellor/$threadId")({
@@ -43,6 +44,8 @@ export const Route = createFileRoute("/_authenticated/counsellor/$threadId")({
       { name: "description", content: "Talk with Saathi, your AI career mentor, by voice or text." },
       { property: "og:title", content: "Talk to Saathi — CareerSaathi" },
       { property: "og:description", content: "Talk with Saathi, your AI career mentor, by voice or text." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: CounsellorPage,
@@ -83,6 +86,7 @@ function CounsellorPage() {
   return (
     <div className="flex h-dvh flex-col bg-background">
       <TopBar threadId={threadId} />
+      <JourneyNav active="understand" />
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center">
           <Shimmer>Getting Saathi ready…</Shimmer>
@@ -213,7 +217,15 @@ function Session({ threadId, initial }: { threadId: string; initial: UIMessage[]
   const [listening, setListening] = useState(false);
   const [interim, setInterim] = useState("");
   const [input, setInput] = useState("");
+  const [reaction, setReaction] = useState<AvatarState>(initial.length === 0 ? "greeting" : "idle");
   const recRef = useRef<ReturnType<typeof createRecognizer>>(null);
+
+  useEffect(() => {
+    if (reaction === "idle") return;
+    const duration = reaction === "greeting" ? 2600 : 2200;
+    const timeout = window.setTimeout(() => setReaction("idle"), duration);
+    return () => window.clearTimeout(timeout);
+  }, [reaction]);
 
   const transport = useMemo(
     () =>
@@ -237,8 +249,10 @@ function Session({ threadId, initial }: { threadId: string; initial: UIMessage[]
     onFinish: ({ message }) => {
       qc.invalidateQueries({ queryKey: ["threads"] });
       qc.setQueryData(["messages", threadId], undefined);
+      const parsed = parseMood(textOf(message));
+      setReaction(parsed.mood === "empathetic" ? "concerned" : parsed.mood === "encouraging" || parsed.mood === "happy" ? "celebrating" : "idle");
       if (!mutedRef.current) {
-        const { clean } = parseMood(textOf(message));
+        const { clean } = parsed;
         if (clean) speak(clean, langRef.current, { onStart: () => setSpeaking(true), onEnd: () => setSpeaking(false) });
       }
     },
@@ -258,7 +272,7 @@ function Session({ threadId, initial }: { threadId: string; initial: UIMessage[]
       ? "talking"
       : busy
         ? "thinking"
-        : "idle";
+        : reaction;
 
   const send = useCallback(
     (text: string) => {
@@ -266,6 +280,7 @@ function Session({ threadId, initial }: { threadId: string; initial: UIMessage[]
       if (!t || busy) return;
       stopSpeaking();
       setSpeaking(false);
+      setReaction("understanding");
       sendMessage({ text: t });
       setInput("");
     },
@@ -327,6 +342,14 @@ function Session({ threadId, initial }: { threadId: string; initial: UIMessage[]
         ? "Thinking…"
         : avatarState === "talking"
           ? "Speaking"
+          : avatarState === "greeting"
+            ? "Glad you’re here"
+            : avatarState === "understanding"
+              ? "I understand"
+              : avatarState === "celebrating"
+                ? "That’s progress!"
+                : avatarState === "concerned"
+                  ? "Let’s work through this"
           : "Tap to speak";
 
   return (

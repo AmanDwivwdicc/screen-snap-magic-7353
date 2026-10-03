@@ -4,10 +4,10 @@ import { JourneyHeader } from "@/components/journey/JourneyHeader";
 import { Button } from "@/components/ui/button";
 import { CAREERS, getCareer } from "@/lib/career-data";
 
-type CompareSearch = { careers?: string[] };
+type CompareSearch = { careers: string[] | undefined };
 
 export const Route = createFileRoute("/_authenticated/compare")({
-  validateSearch: (search: Record<string, unknown>): CompareSearch => ({ careers: Array.isArray(search.careers) ? search.careers.filter((value): value is string => typeof value === "string").slice(0, 2) : undefined }),
+  validateSearch: (search: Record<string, unknown>): CompareSearch => ({ careers: Array.isArray(search["careers"]) ? search["careers"].filter((value): value is string => typeof value === "string").slice(0, 2) : undefined }),
   head: () => ({ meta: [
     { title: "Compare Careers — CareerSaathi" },
     { name: "description", content: "Compare vocational careers side by side across income, security, growth, training, and family priorities." },

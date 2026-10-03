@@ -15,6 +15,8 @@ export const Route = createFileRoute("/auth")({
       { name: "description", content: "Sign in to continue your conversations with Saathi." },
       { property: "og:title", content: "Sign in — CareerSaathi" },
       { property: "og:description", content: "Sign in to continue your conversations with Saathi." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AuthPage,
@@ -70,7 +72,7 @@ function AuthPage() {
   return (
     <div className="grid min-h-screen bg-warm-gradient md:grid-cols-2">
       <div className="relative hidden bg-stage-gradient md:block">
-        <MentorAvatar state="idle" mood="encouraging" className="absolute inset-x-16 bottom-0 top-24" />
+        <MentorAvatar state="greeting" mood="encouraging" className="absolute inset-x-16 bottom-0 top-24" />
         <Link to="/" className="absolute left-8 top-8 font-display text-2xl text-foreground">CareerSaathi</Link>
       </div>
       <div className="flex items-center justify-center p-6">

@@ -17,7 +17,7 @@ export function JourneyNav({ active }: { active: string }) {
         {STEPS.map((step, index) => {
           const Icon = step.icon;
           const selected = active === step.label.toLowerCase();
-          const available = "to" in step;
+          const destination = "to" in step ? step.to : null;
           const content = (
             <>
               <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-full", selected ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground")}>
@@ -26,8 +26,8 @@ export function JourneyNav({ active }: { active: string }) {
               <span className="whitespace-nowrap text-xs font-semibold">{step.label}</span>
             </>
           );
-          return available ? (
-            <Link key={step.label} to={step.to} className={cn("flex items-center gap-2 rounded-full px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground", selected && "text-foreground")}>{content}</Link>
+          return destination ? (
+            <Link key={step.label} to={destination} className={cn("flex items-center gap-2 rounded-full px-3 py-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground", selected && "text-foreground")}>{content}</Link>
           ) : (
             <span key={step.label} aria-disabled="true" className="flex items-center gap-2 rounded-full px-3 py-2 text-muted-foreground/60" title="Coming next">{content}</span>
           );

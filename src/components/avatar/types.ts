@@ -1,4 +1,13 @@
-export type AvatarState = "idle" | "listening" | "thinking" | "talking";
+export type AvatarState =
+  | "idle"
+  | "greeting"
+  | "listening"
+  | "understanding"
+  | "thinking"
+  | "talking"
+  | "celebrating"
+  | "concerned"
+  | "goodbye";
 export type AvatarMood = "neutral" | "happy" | "empathetic" | "encouraging" | "curious";
 
 export const MOODS: AvatarMood[] = ["neutral", "happy", "empathetic", "encouraging", "curious"];

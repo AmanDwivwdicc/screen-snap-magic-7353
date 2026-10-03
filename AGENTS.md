@@ -12,3 +12,4 @@
 - AI chat streams through the `/api/chat` server route (`src/lib/ai/chat.server.ts`), which verifies the caller's bearer token and persists messages to `threads`/`messages` — keeps the AI key server-side and history per user.
 - The mentor avatar is a self-contained component (`src/components/avatar/`) driven only by `state` + `mood` props — so it can be swapped for a real avatar provider later.
 - Assistant replies start with a hidden `[[mood:x]]` tag parsed by `parseMood` — drives avatar emotion without a separate call.
+- Career journey content uses shared typed data from `src/lib/career-data.ts` — keeps Discover and Compare facts consistent.

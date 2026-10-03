@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedCompareRouteImport } from './routes/_authenticated/compare'
+import { Route as AuthenticatedDiscoverRouteImport } from './routes/_authenticated/discover'
+import { Route as AuthenticatedFamilyRouteImport } from './routes/_authenticated/family'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedCounsellorIndexRouteImport } from './routes/_authenticated/counsellor.index'
 import { Route as AuthenticatedCounsellorThreadIdRouteImport } from './routes/_authenticated/counsellor.$threadId'
@@ -29,6 +32,21 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCompareRoute = AuthenticatedCompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDiscoverRoute = AuthenticatedDiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFamilyRoute = AuthenticatedFamilyRouteImport.update({
+  id: '/family',
+  path: '/family',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
@@ -51,6 +69,9 @@ const AuthenticatedCounsellorThreadIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/compare': typeof AuthenticatedCompareRoute
+  '/discover': typeof AuthenticatedDiscoverRoute
+  '/family': typeof AuthenticatedFamilyRoute
   '/api/chat': typeof ApiChatRoute
   '/counsellor/$threadId': typeof AuthenticatedCounsellorThreadIdRoute
   '/counsellor/': typeof AuthenticatedCounsellorIndexRoute
@@ -58,6 +79,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/compare': typeof AuthenticatedCompareRoute
+  '/discover': typeof AuthenticatedDiscoverRoute
+  '/family': typeof AuthenticatedFamilyRoute
   '/api/chat': typeof ApiChatRoute
   '/counsellor/$threadId': typeof AuthenticatedCounsellorThreadIdRoute
   '/counsellor': typeof AuthenticatedCounsellorIndexRoute
@@ -67,6 +91,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/compare': typeof AuthenticatedCompareRoute
+  '/_authenticated/discover': typeof AuthenticatedDiscoverRoute
+  '/_authenticated/family': typeof AuthenticatedFamilyRoute
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/counsellor/$threadId': typeof AuthenticatedCounsellorThreadIdRoute
   '/_authenticated/counsellor/': typeof AuthenticatedCounsellorIndexRoute
@@ -74,14 +101,32 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/api/chat' | '/counsellor/$threadId' | '/counsellor/'
+    | '/'
+    | '/auth'
+    | '/compare'
+    | '/discover'
+    | '/family'
+    | '/api/chat'
+    | '/counsellor/$threadId'
+    | '/counsellor/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/api/chat' | '/counsellor/$threadId' | '/counsellor'
+  to:
+    | '/'
+    | '/auth'
+    | '/compare'
+    | '/discover'
+    | '/family'
+    | '/api/chat'
+    | '/counsellor/$threadId'
+    | '/counsellor'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/compare'
+    | '/_authenticated/discover'
+    | '/_authenticated/family'
     | '/api/chat'
     | '/_authenticated/counsellor/$threadId'
     | '/_authenticated/counsellor/'
@@ -117,6 +162,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/compare': {
+      id: '/_authenticated/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof AuthenticatedCompareRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/discover': {
+      id: '/_authenticated/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof AuthenticatedDiscoverRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/family': {
+      id: '/_authenticated/family'
+      path: '/family'
+      fullPath: '/family'
+      preLoaderRoute: typeof AuthenticatedFamilyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -142,11 +208,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCompareRoute: typeof AuthenticatedCompareRoute
+  AuthenticatedDiscoverRoute: typeof AuthenticatedDiscoverRoute
+  AuthenticatedFamilyRoute: typeof AuthenticatedFamilyRoute
   AuthenticatedCounsellorThreadIdRoute: typeof AuthenticatedCounsellorThreadIdRoute
   AuthenticatedCounsellorIndexRoute: typeof AuthenticatedCounsellorIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCompareRoute: AuthenticatedCompareRoute,
+  AuthenticatedDiscoverRoute: AuthenticatedDiscoverRoute,
+  AuthenticatedFamilyRoute: AuthenticatedFamilyRoute,
   AuthenticatedCounsellorThreadIdRoute: AuthenticatedCounsellorThreadIdRoute,
   AuthenticatedCounsellorIndexRoute: AuthenticatedCounsellorIndexRoute,
 }

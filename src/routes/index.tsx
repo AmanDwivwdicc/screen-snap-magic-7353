@@ -15,6 +15,8 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "A warm AI mentor for vocational careers, built for students and their families.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
@@ -58,7 +60,7 @@ function Index() {
         </div>
 
         <div className="relative mx-auto aspect-[5/6] w-full max-w-md rounded-[2.5rem] bg-stage-gradient shadow-soft">
-          <MentorAvatar state="idle" mood="happy" className="absolute inset-x-6 bottom-0 top-8" />
+          <MentorAvatar state="greeting" mood="happy" className="absolute inset-x-6 bottom-0 top-8" />
           <div className="glass absolute left-6 top-6 max-w-[70%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm text-foreground">
             Hey! 👋 What are you thinking about these days?
           </div>

@@ -108,7 +108,7 @@ function TopBar({ threadId }: { threadId: string }) {
     const { data: u } = await supabase.auth.getUser();
     if (!u.user) return;
     const { data, error } = await supabase.from("threads").insert({ user_id: u.user.id }).select("id").single();
-    if (error) return toast.error("Couldn't start a new conversation");
+    if (error) { toast.error("Couldn't start a new conversation"); return; }
     await qc.invalidateQueries({ queryKey: ["threads"] });
     setOpen(false);
     navigate({ to: "/counsellor/$threadId", params: { threadId: data.id } });
@@ -116,7 +116,7 @@ function TopBar({ threadId }: { threadId: string }) {
 
   async function remove(id: string) {
     const { error } = await supabase.from("threads").delete().eq("id", id);
-    if (error) return toast.error("Couldn't delete");
+    if (error) { toast.error("Couldn't delete"); return; }
     await qc.invalidateQueries({ queryKey: ["threads"] });
     if (id === threadId) navigate({ to: "/counsellor" });
   }
@@ -296,8 +296,9 @@ function Session({ threadId, initial }: { threadId: string; initial: UIMessage[]
     rec.onresult = (e) => {
       let txt = "";
       for (let i = 0; i < e.results.length; i++) {
-        txt += e.results[i][0].transcript;
-        if (e.results[i].isFinal) finalText = txt;
+        const r = e.results[i]!;
+        txt += r[0]?.transcript ?? "";
+        if (r.isFinal) finalText = txt;
       }
       setInterim(txt);
     };

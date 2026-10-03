@@ -75,7 +75,7 @@ export async function handleChat(request: Request) {
   if (!thread) return json(404, "Conversation not found.");
 
   // persist latest user message
-  const last = messages[messages.length - 1];
+  const last = messages[messages.length - 1]!;
   if (last.role === "user") {
     const { error } = await supabase
       .from("messages")

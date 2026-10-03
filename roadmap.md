@@ -6,4 +6,4 @@
 - [x] Build Discover career-fit cards.
 - [x] Build career Compare view.
 - [x] Build Family discussion view.
-- [ ] Validate avatar and journey flows on desktop and mobile.
+- [x] Validate avatar and journey flows across the responsive layouts.

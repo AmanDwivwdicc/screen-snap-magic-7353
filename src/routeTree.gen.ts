@@ -10,33 +10,88 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthenticatedCounsellorIndexRouteImport } from './routes/_authenticated/counsellor.index'
+import { Route as AuthenticatedCounsellorThreadIdRouteImport } from './routes/_authenticated/counsellor.$threadId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCounsellorIndexRoute =
+  AuthenticatedCounsellorIndexRouteImport.update({
+    id: '/counsellor/',
+    path: '/counsellor/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCounsellorThreadIdRoute =
+  AuthenticatedCounsellorThreadIdRouteImport.update({
+    id: '/counsellor/$threadId',
+    path: '/counsellor/$threadId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/api/chat': typeof ApiChatRoute
+  '/counsellor/$threadId': typeof AuthenticatedCounsellorThreadIdRoute
+  '/counsellor/': typeof AuthenticatedCounsellorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/api/chat': typeof ApiChatRoute
+  '/counsellor/$threadId': typeof AuthenticatedCounsellorThreadIdRoute
+  '/counsellor': typeof AuthenticatedCounsellorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/api/chat': typeof ApiChatRoute
+  '/_authenticated/counsellor/$threadId': typeof AuthenticatedCounsellorThreadIdRoute
+  '/_authenticated/counsellor/': typeof AuthenticatedCounsellorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/auth' | '/api/chat' | '/counsellor/$threadId' | '/counsellor/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/auth' | '/api/chat' | '/counsellor/$threadId' | '/counsellor'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/api/chat'
+    | '/_authenticated/counsellor/$threadId'
+    | '/_authenticated/counsellor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +103,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/counsellor/': {
+      id: '/_authenticated/counsellor/'
+      path: '/counsellor'
+      fullPath: '/counsellor/'
+      preLoaderRoute: typeof AuthenticatedCounsellorIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/counsellor/$threadId': {
+      id: '/_authenticated/counsellor/$threadId'
+      path: '/counsellor/$threadId'
+      fullPath: '/counsellor/$threadId'
+      preLoaderRoute: typeof AuthenticatedCounsellorThreadIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCounsellorThreadIdRoute: typeof AuthenticatedCounsellorThreadIdRoute
+  AuthenticatedCounsellorIndexRoute: typeof AuthenticatedCounsellorIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCounsellorThreadIdRoute: AuthenticatedCounsellorThreadIdRoute,
+  AuthenticatedCounsellorIndexRoute: AuthenticatedCounsellorIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
